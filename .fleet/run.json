@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "type": "command",
+            "name": "Configure",
+            "program": "cmake",
+            "args": ["-G", "MinGW Makefiles", "-B", "$PROJECT_DIR$/cmake-build-debug", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"]
+        },
+        {
+            "type": "command",
+            "name": "Build",
+            "program": "cmake",
+            "args": ["--build", "$PROJECT_DIR$/cmake-build-debug", "--target", "$PROJECT_DIR_NAME$"]
+        },
+        {
+            "type": "command",
+            "name": "Run",
+            "program": "$PROJECT_DIR$/cmake-build-debug/$PROJECT_DIR_NAME$.exe"
+        },
+        {
+            "type": "command",
+            "name": "Build&&Run",
+            "dependsOn": ["Build", "Run"],
+            "program": "",
+        }
+    ]
+}
