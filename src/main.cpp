@@ -116,22 +116,34 @@ int main(void)
     std::cout << glGetString(GL_VERSION) << std::endl; // 输出OpenGL版本
 
     // 定义三角形的顶点位置
-    float position[6] = {
-        -0.5f, -0.5f,  // 左下顶点
-         0.0f,  0.5f,  // 顶部顶点
-         0.5f, -0.5f   // 右下顶点
+    float position[] = {
+        -0.5f, -0.5f, //0
+         0.5f, -0.5f, //1
+         0.5f,  0.5f, //2
+        -0.5f,  0.5f, //3
+    };
+
+    unsigned int indices[] = {
+        0, 1, 2,
+        2, 3, 0
     };
 
     // 生成并绑定缓冲区来存储顶点数据
     unsigned int buffer;
     glGenBuffers(1, &buffer); // 生成缓冲区ID
     glBindBuffer(GL_ARRAY_BUFFER, buffer); // 将缓冲区绑定为活动数组缓冲
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), position, GL_STATIC_DRAW); // 将顶点数据上传到缓冲区
+    glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), position, GL_STATIC_DRAW); // 将顶点数据上传到缓冲区
 
     // 启用位置为0的顶点属性
     glEnableVertexAttribArray(0);
     // 定义顶点属性的格式和来源
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+
+    // 生成并绑定缓冲区来存储顶点数据
+    unsigned int ibo;
+    glGenBuffers(1, &ibo); // 生成缓冲区ID
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); // 将缓冲区绑定为活动数组缓冲
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW); // 将顶点数据上传到缓冲区
 
     ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
 
@@ -144,7 +156,7 @@ int main(void)
     {
         glClear(GL_COLOR_BUFFER_BIT); // 清除颜色缓冲区
 
-        glDrawArrays(GL_TRIANGLES, 0, 3); // 使用顶点数组绘制三角形
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window); // 交换前后缓冲区
         glfwPollEvents(); // 轮询并处理事件
